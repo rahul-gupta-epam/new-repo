@@ -1,0 +1,290 @@
+[
+{
+  "pharmacyType": "RETAIL",
+  "partnerId": "ABCD01",
+  "doctors": [
+    {
+      "id": "269880",
+      "name": "CAMACHO, IVAN",
+      "npi": "1194999227",
+      "address": {
+        "address1": "1295 NW  14TH ST",
+        "address2": "STE K",
+        "city": "MIAMI",
+        "state": "FL",
+        "zip": "33125"
+      }
+    },
+    {
+      "id": "9275394",
+      "name": "LOPEZ, CARLOS",
+      "npi": "1063531473",
+      "address": {
+        "address1": "20950 NE  27TH CT",
+        "city": "MIAMI",
+        "state": "FL",
+        "zip": "33180"
+      }
+    },
+    {
+      "id": "395821",
+      "name": "LOPEZ-ALVAR, ALEXANDER",
+      "npi": "1295798882",
+      "address": {
+        "address1": "11000 SW  211TH ST",
+        "city": "MIAMI",
+        "state": "FL",
+        "zip": "33189"
+      }
+    }
+  ],
+  "zip": "33010",
+  "county": "12086",
+  "year": 2020,
+  "drugs": [
+    {
+      "name": "Advair Diskus AERO 250-50MCG",
+      "id": 150993,
+      "ps": 4640,
+      "pm": 60,
+      "qty": 1,
+      "frequency": 30
+    },
+    {
+      "name": "Lipitor TAB 10MG",
+      "id": 47942,
+      "ps": 0,
+      "pm": 0,
+      "qty": 30,
+      "frequency": 30
+    },
+    {
+      "name": "Warfarin Sodium TAB 5MG",
+      "id": 23836,
+      "ps": 0,
+      "pm": 0,
+      "qty": 30,
+      "frequency": 30
+    }
+  ],
+  "applicants": [
+    {
+      "partBDate": "2015-04-01",
+      "birthDay": 20,
+      "birthMonth": 4,
+      "smoker": false,
+      "gender": "male",
+      "birthYear": 1953,
+      "health": "Good",
+      "id": 1,
+      "type": "primary",
+      "effectiveDate": "2018-11-01"
+    }
+  ],
+  "customerCode": "sqrf7133",
+  "pharmacy": {
+    "name": "SYLVESTRE PHARMACY",
+    "id": 1417970898
+  },
+  "planType": "v2",
+  "prospectId": "f1f4ae30-5f57-11eb-bf1d-bdbb780946c2",
+  "parameters": {
+    "leadId": "100"
+  },
+  "webHook": {
+    "type": "SAVEDSESSION"
+  }
+},
+{
+  "pharmacyType": "RETAIL",
+  "partnerId": "ABCD01",
+  "doctors": [
+    {
+      "id": "269880",
+      "name": "CAMACHO, IVAN",
+      "npi": "1194999227",
+      "address": {
+        "address1": "1295 NW  14TH ST",
+        "address2": "STE K",
+        "city": "MIAMI",
+        "state": "FL",
+        "zip": "33125"
+      }
+    },
+    {
+      "id": "9275394",
+      "name": "LOPEZ, CARLOS",
+      "npi": "1063531473",
+      "address": {
+        "address1": "20950 NE  27TH CT",
+        "city": "MIAMI",
+        "state": "FL",
+        "zip": "33180"
+      }
+    },
+    {
+      "id": "395821",
+      "name": "LOPEZ-ALVAR, ALEXANDER",
+      "npi": "1295798882",
+      "address": {
+        "address1": "11000 SW  211TH ST",
+        "city": "MIAMI",
+        "state": "FL",
+        "zip": "33189"
+      }
+    }
+  ],
+  "zip": "33010",
+  "county": "12086",
+  "year": 2020,
+  "drugs": [
+    {
+      "name": "Advair Diskus AERO 250-50MCG",
+      "id": 150993,
+      "ps": 4640,
+      "pm": 60,
+      "qty": 1,
+      "frequency": 30
+    },
+    {
+      "name": "Lipitor TAB 10MG",
+      "id": 47942,
+      "ps": 0,
+      "pm": 0,
+      "qty": 30,
+      "frequency": 30
+    },
+    {
+      "name": "Warfarin Sodium TAB 5MG",
+      "id": 23836,
+      "ps": 0,
+      "pm": 0,
+      "qty": 30,
+      "frequency": 30
+    }
+  ],
+  "applicants": [
+    {
+      "partBDate": "2015-04-01",
+      "birthDay": 20,
+      "birthMonth": 4,
+      "smoker": false,
+      "gender": "male",
+      "birthYear": 1953,
+      "health": "Good",
+      "id": 1,
+      "type": "primary",
+      "effectiveDate": "2018-11-01"
+    }
+  ],
+  "customerCode": "sqrf71335",
+  "pharmacy": {
+    "name": "SYLVESTRE PHARMACY",
+    "id": 1417970898
+  },
+  "planType": "v2",
+  "prospectId": "f1f4ae30-5f57-11eb-bf1d-bdbb780946c2",
+  "parameters": {
+    "leadId": "100"
+  },
+  "webHook": {
+    "type": "SAVEDSESSION"
+  }
+},
+{
+  "pharmacyType": "RETAIL",
+  "partnerId": "ABCD01",
+  "doctors": [
+    {
+      "id": "269880",
+      "name": "CAMACHO, IVAN",
+      "npi": "1194999227",
+      "address": {
+        "address1": "1295 NW  14TH ST",
+        "address2": "STE K",
+        "city": "MIAMI",
+        "state": "FL",
+        "zip": "33125"
+      }
+    },
+    {
+      "id": "9275394",
+      "name": "LOPEZ, CARLOS",
+      "npi": "1063531473",
+      "address": {
+        "address1": "20950 NE  27TH CT",
+        "city": "MIAMI",
+        "state": "FL",
+        "zip": "33180"
+      }
+    },
+    {
+      "id": "395821",
+      "name": "LOPEZ-ALVAR, ALEXANDER",
+      "npi": "1295798882",
+      "address": {
+        "address1": "11000 SW  211TH ST",
+        "city": "MIAMI",
+        "state": "FL",
+        "zip": "33189"
+      }
+    }
+  ],
+  "zip": "33010",
+  "county": "12086",
+  "year": 2020,
+  "drugs": [
+    {
+      "name": "Advair Diskus AERO 250-50MCG",
+      "id": 150993,
+      "ps": 4640,
+      "pm": 60,
+      "qty": 1,
+      "frequency": 30
+    },
+    {
+      "name": "Lipitor TAB 10MG",
+      "id": 47942,
+      "ps": 0,
+      "pm": 0,
+      "qty": 30,
+      "frequency": 30
+    },
+    {
+      "name": "Warfarin Sodium TAB 5MG",
+      "id": 23836,
+      "ps": 0,
+      "pm": 0,
+      "qty": 30,
+      "frequency": 30
+    }
+  ],
+  "applicants": [
+    {
+      "partBDate": "2015-04-01",
+      "birthDay": 20,
+      "birthMonth": 4,
+      "smoker": false,
+      "gender": "male",
+      "birthYear": 1953,
+      "health": "Good",
+      "id": 1,
+      "type": "primary",
+      "effectiveDate": "2018-11-01"
+    }
+  ],
+  "customerCode": "sqrf71336",
+  "pharmacy": {
+    "name": "SYLVESTRE PHARMACY",
+    "id": 1417970898
+  },
+  "planType": "v2",
+  "prospectId": "f1f4ae30-5f57-11eb-bf1d-bdbb780946c2",
+  "parameters": {
+    "leadId": "100"
+  },
+  "webHook": {
+    "type": "SAVEDSESSION"
+  }
+}
+]

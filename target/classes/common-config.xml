@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd">
+	<http:listener-config name="HTTPS_Listener_config" doc:name="HTTP Listener config" doc:id="9c70c6e8-9c39-4d8b-b8d5-5d9210f1ab52" >
+		<http:listener-connection host="${secure::http.host}" port="${secure::https.port}" protocol="HTTPS">
+			<tls:context >
+				<tls:key-store type="jks" path="keystore.jks" alias="${secure::keystore.key}" keyPassword="${secure::keystore.password}" password="${secure::keystore.password}" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	 <apikit:config name="api-config" api="al-dtc-sys-salesforce-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" >
+		<apikit:flow-mappings >
+			<apikit:flow-mapping resource="/enrollment" action="post" content-type="application/json" flow-ref="post:\enrollment:application\json:api-config" />
+			<apikit:flow-mapping resource="/savedsession" action="post" content-type="application/json" flow-ref="post:\savedsession:application\json:api-config" />
+			<apikit:flow-mapping resource="/lead" action="post" flow-ref="post:\lead:application\json:al-dtc-sys-salesforce-api-config" />
+
+		</apikit:flow-mappings>
+	</apikit:config>
+	
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="30c26858-ba9f-4e0f-a637-3107c3756386" key="${property.key}" file="env/al-dtc-sys-salesforce-api-${mule.env}.properties">
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<salesforce:sfdc-config name="Sunfire_Salesforce_QA_Config" doc:name="Salesforce Config" doc:id="5dde74aa-0194-43b1-8856-110e06d17865" fetchAllApexRestMetadata="true">
+		<salesforce:jwt-connection consumerKey="${secure::sunfire.sfdc.consumerKey}" storePassword="${secure::sfdc.keyPass}" principal="${secure::sunfire.sfdc.principal}" tokenEndpoint="${secure::sfdc.token}" audienceUrl="${secure::sfdc.url}" keyStore="sunfire-salesforce-jwt-keystore.jks"/>
+	</salesforce:sfdc-config>
+	<salesforce:sfdc-config name="CDP_Salesforce_Config" doc:name="Salesforce Config" doc:id="44d0d23e-23a1-4120-855d-c2658cd95e8c" >
+		<salesforce:jwt-connection consumerKey="${secure::sfdc.consumerKey}" storePassword="${secure::sfdc.keyPass}" principal="${secure::sfdc.principal}" tokenEndpoint="${secure::sfdc.token}" audienceUrl="${secure::sfdc.url}" keyStore="jks/cdp-salesforce-jwt-${mule.env}-keystore.jks"/>
+	</salesforce:sfdc-config>
+	<http:request-config name="CDP-ProcAPI-HTTP_Requester" doc:name="HTTP Request configuration" doc:id="86a12fb5-f9a7-442e-a57d-6dd873fbda80" basePath="${secure::cdpSys.api.path}" sendCorrelationId="ALWAYS" responseTimeout="${secure::cdpSys.api.respTimeout}">
+		<http:request-connection protocol="HTTPS" host="${secure::cdpSys.api.host}" port="${secure::cdpSys.api.port}">
+			<reconnection >
+				<reconnect />
+			</reconnection>
+		</http:request-connection>
+	</http:request-config>
+	<cloudhub:config name="CloudHub_Config" doc:name="CloudHub Config" doc:id="d08a2bdf-ba43-467a-b8e0-aa9554b82829" >
+		<cloudhub:connection username="${secure::Cloudhub.username}" password="${secure::Cloudhub.password}" environment="${secure::Cloudhub.envId}" />
+	</cloudhub:config>
+	<flow name="Cloudhub-CreateAlert-flow" doc:id="5019692d-9c36-4c84-8600-83c96de199cd" >
+		<cloudhub:create-notification doc:name="Create Notification" doc:id="c02b861e-6b21-4d97-acee-9d7ab90234eb" config-ref="CloudHub_Config" domain="${secure::Cloudhub.domain}" priority="ERROR"/>
+		<logger level="INFO" doc:name="Logger" doc:id="cc9e0b30-3eac-41bd-a064-a4c5bbca50b8" message="Sent Cloudhub alert"/>
+	</flow>
+	
+</mule>

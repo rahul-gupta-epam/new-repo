@@ -1,0 +1,66 @@
+#%RAML 1.0
+title: al-dtc-sys-salesforce-api
+version: v1
+description: This Api Can be used to Consume Enrollment,SavedSession requests from process api's 
+protocols: [HTTPS]
+mediaType: application/json
+
+/enrollment: 
+  description: This Resource Can be used to send Enrollment Webhook details to Salesforce
+  post:
+    description: This method can be used to POST Enrollment details
+    body:
+      application/json:
+        example: !include examples/enrollmentRequest.json
+    responses:
+      200:
+        body:
+          application/json:
+      400:
+        body:
+          application/json:
+      500:
+        body:
+          application/json:
+            
+/savedsession:
+  description: This Resource Can be used to send SavedSession Webhook details to Salesforce
+  post:
+    description: This method can be used to POST SavedSession details
+    body:
+      application/json:
+        example: !include examples/savedSessionRequest.json
+    responses:
+      200:
+        body:
+          application/json:
+      400:
+        body:
+          application/json:
+      500:
+        body:
+          application/json:
+
+/lead:
+  displayName: Send new lead
+  description: Send new lead details to Salesforce system
+  post:
+    displayName: Send new lead
+    description: Send new lead details
+    body:
+      application/json:
+        example: !include examples/lead.json
+    responses:
+      200:
+        description: Success
+        body:
+          application/json:
+            examples:
+              output: !include examples/success-message.json
+      400:
+        description: Error
+        body:
+          application/json:
+            examples:
+              output: !include examples/error-response-example.json
+  
