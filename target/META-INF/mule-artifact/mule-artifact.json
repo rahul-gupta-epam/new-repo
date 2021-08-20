@@ -1,0 +1,49 @@
+{
+  "configs": [
+    "cdp-crm_outbound.xml",
+    "lead.xml",
+    "api.xml",
+    "savedsession.xml",
+    "enrollment.xml",
+    "common-config.xml"
+  ],
+  "secureProperties": [
+    "property.key"
+  ],
+  "redeploymentEnabled": true,
+  "name": "com.mycompany:al-dtc-sys-salesforce-api:1.0.0-SNAPSHOT",
+  "minMuleVersion": "4.3.0",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedPackages": [],
+      "exportedResources": [
+        "api/al-dtc-sys-salesforce-api.raml",
+        "api/examples/enrollmentRequest.json",
+        "api/examples/error-response-example.json",
+        "api/examples/lead.json",
+        "api/examples/savedSessionRequest.json",
+        "api/examples/success-message.json",
+        "api.xml",
+        "application-types.xml",
+        "cdp-crm_outbound.xml",
+        "common-config.xml",
+        "enrollment.xml",
+        "env/al-dtc-sys-salesforce-api-dev.properties",
+        "env/al-dtc-sys-salesforce-api-test.properties",
+        "jks/cdp-salesforce-jwt-dev-keystore.jks",
+        "keystore.jks",
+        "lead.xml",
+        "log4j2.xml",
+        "savedsession.xml",
+        "sunfire-salesforce-jwt-keystore.jks",
+        "truststore.ts"
+      ]
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}

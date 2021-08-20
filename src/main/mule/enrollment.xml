@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:salesforce-composite="http://www.mulesoft.org/schema/mule/salesforce-composite" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce-composite http://www.mulesoft.org/schema/mule/salesforce-composite/current/mule-salesforce-composite.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+	<flow name="enrollmentFlow" doc:id="3ef91eea-6a80-44c6-a224-9ce10df97ea8" >
+		<logger level="INFO" doc:name="Logger" doc:id="2027e61f-20d1-4c2f-9a8a-90b9bc7aff39" message="#[flow.name ++ '	START transactionId is:' ++ vars.transactionId]"/>
+		<set-variable value="#[[]]" doc:name="setDeleteEnrolmentKeysFromObjectstore" doc:id="d0f347bd-d081-4e52-8d8d-bb05f5edc77d" variableName="deleteEnrolmentKeysFromObjectstore" mimeType="application/java"/>
+		<foreach doc:name="For Each" doc:id="b246e484-b1b0-463a-ae4b-3fe1e0d07f70" batchSize="200" collection="#[payload]">
+			<ee:transform doc:name="sunfireToSalesforceEnrollmentConversion" doc:id="2b44923e-425b-46f5-adf9-876d6c1ebe1d">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Enrollment" : payload
+}]]></ee:set-payload>
+			</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="enrollmentKeys" ><![CDATA[%dw 2.0
+output application/json
+---
+payload map $.enrollmentCode]]></ee:set-variable>
+				</ee:variables>
+		</ee:transform>
+			<try doc:name="Try" doc:id="1e5e4ea4-5855-4ef0-9fff-ca9c5e82c17f" >
+				<logger level="INFO" doc:name="Logger" doc:id="692b30f3-47a7-4f85-9bae-2aacb895e691" message="Enrollment Codes Sent To Salesforce is:   #[vars.enrollmentKeys]"/>
+				<salesforce:invoke-apex-rest-method doc:name="Invoke apex rest method" doc:id="32a2c0d8-3a2a-4796-89df-b64307c8728e" config-ref="Sunfire_Salesforce_QA_Config" className="EnrolmentWebhook" methodName="submitDetails^/EnrolmentWebhook/*^HttpPost^Output^">
+		</salesforce:invoke-apex-rest-method>
+				<logger level="INFO" doc:name="Logger" doc:id="a4e33e62-a7f5-4413-8f7d-604742126722" message="Enrollment Response From Salesforce::  #[payload]" />
+				<set-variable value="#[%dw 2.0&#10;output application/java&#10;---&#10;flatten(vars.deleteEnrolmentKeysFromObjectstore &lt;&lt; vars.enrollmentKeys)]" doc:name="updateDeleteEnrolmentKeysFromObjectstore" doc:id="cbdf7e10-bfef-4422-ae6f-7e48d9330e4d" variableName="deleteEnrolmentKeysFromObjectstore" mimeType="application/java" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="b77efd7a-0088-44fc-8a72-7905b2aeae5b">
+						<logger level="INFO" doc:name="Trigger Email Here" doc:id="28aa53c3-a7ed-45e3-93cb-6053c2a5e8b7" message="#['System Down Error']" />
+						<ee:transform doc:name="Transform Message" doc:id="f6d9fa79-dea1-4be5-9809-86a6d5db61ac" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message": "Salesforce Connection issue, Records will be re-processed by Mule",
+	"FailedRecords": vars.enrollmentKeys
+}]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+						<flow-ref doc:name="Cloudhub Alert" doc:id="d466ff50-e4b1-4f2e-9e07-dc55f584af1e" name="Cloudhub-CreateAlert-flow"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</foreach>
+		<ee:transform doc:name="setPayload" doc:id="378abe87-2158-4897-bd4c-9047acc3add6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.deleteEnrolmentKeysFromObjectstore]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

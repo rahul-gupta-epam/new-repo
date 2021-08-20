@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="api-test-suite.xml" />
+	<global-property doc:name="Global Property" doc:id="da1d684c-6122-459f-a6dd-31cfc8261d1d" name="mule.env" value="dev" />
+	<global-property doc:name="Global Property" doc:id="82fb5838-23ab-44b7-b6dc-94d284d30830" name="property.key" value="amerilife@123" />
+	<munit:test name="api-test-suite-post:\enrollment:application\json:api-configTest" doc:id="590c78c6-752b-435c-8880-0b8e3f182577" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="cdcb09b2-cd4e-4fab-9803-b96125b55048" processor="salesforce:invoke-apex-rest-method">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Invoke apex rest method" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="32a2c0d8-3a2a-4796-89df-b64307c8728e" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#['{submitDetailsOutput={details=null, status=Success}}']" mediaType="application/java" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="cc9fc740-7795-420d-9682-d4f9f6cddecc" >
+				<munit:payload value='[{&#10;      "applicant":&#10;      {&#10;        "plan":&#10;        {&#10;          "id": "142611",&#10;          "contractId": "H5216",&#10;          "planId": "068",&#10;          "segmentId": "000",&#10;          "year": "2018",&#10;          "carrierName": "Humana Inc.",&#10;          "name": "HumanaChoice Florida H5216-068 (PPO)",&#10;          "type": "MA",&#10;          "displayName": "HumanaChoice Florida H5216-068 (PPO)",&#10;          "displayId": "H5216-068-000",&#10;          "premium": 0,&#10;          "effectiveDate":&#10;          {&#10;            "month": "08",&#10;            "day": "01",&#10;            "year": "2018"&#10;          },&#10;          "fmtPremium": "$0.00",&#10;          "carrierId": "0014C00000XxEU8QAN"&#10;        },&#10;        "firstName": "Sylvie",&#10;        "okToEmail": "Y",&#10;        "electionPeriod": "SEP",&#10;        "sepCode": "CHR",&#10;        "sepDate":&#10;        {&#10;          "month": "06",&#10;          "day": "02",&#10;          "year": "2018"&#10;        },&#10;        "lastName": "West",&#10;        "medicareNumber": "3304004A",&#10;        "gender": "M",&#10;        "partADate":&#10;        {&#10;          "month": "01",&#10;          "day": "01",&#10;          "year": "2000"&#10;        },&#10;        "partBDate":&#10;        {&#10;          "month": "01",&#10;          "day": "01",&#10;          "year": "2000"&#10;        },&#10;        "dob":&#10;        {&#10;          "month": "11",&#10;          "day": "11",&#10;          "year": "1940"&#10;        },&#10;        "home":&#10;        {&#10;          "line1": "22 South St.",&#10;          "city": "Hialeah",&#10;          "countyName": "Miami-Dade",&#10;          "fips": "12086",&#10;          "state": "FL",&#10;          "zip": "33010"&#10;        },&#10;        "mail":&#10;        {&#10;          "line1": "22 South St.",&#10;          "city": "Hialeah",&#10;          "countyName": "Miami-Dade",&#10;          "fips": "12086",&#10;          "state": "FL",&#10;          "zip": "33010"&#10;        },&#10;        "phone":&#10;        {&#10;          "primary": "9784504200"&#10;        },&#10;        "email": "test1@sunfirematrix.com",&#10;        "language": "English",&#10;        "pcp":&#10;        {&#10;          "id": "231918",&#10;          "name": "William Duggan",&#10;          "establishedPatient": "Y",&#10;          "designatePCP": "Y"&#10;        },&#10;        "esrd":&#10;        {&#10;          "has": "Y",&#10;          "enrolledWithCarrier": "N",&#10;          "successfulTransplant": "Y",&#10;          "requireRegularDialysis": "N"&#10;        },&#10;        "medicaid":&#10;        {&#10;          "has": "Y",&#10;          "medicaidNumber": "01293010923"&#10;        },&#10;        "ltc":&#10;        {&#10;          "has": "Y",&#10;          "name": "Harvard Health",&#10;          "phone": "9782009000",&#10;          "admitDate":&#10;          {&#10;            "month": "01",&#10;            "day": "01",&#10;            "year": "2015"&#10;          },&#10;          "address":&#10;          {&#10;            "line1": "30 Park St.",&#10;            "city": "Concord",&#10;            "countyName": "MIDDLESEX",&#10;            "fips": "25017",&#10;            "state": "MA",&#10;            "zip": "01775"&#10;          }&#10;        },&#10;        "work": "Y",&#10;        "otherGroupCoverage":&#10;        {&#10;          "has": "Y",&#10;          "policyId": "55T76",&#10;          "name": "UHC",&#10;          "address":&#10;          {&#10;            "line1": "44 Robert Rd",&#10;            "city": "stow",&#10;            "countyName": "MIDDLESEX",&#10;            "fips": "25017",&#10;            "state": "MA",&#10;            "zip": "01775"&#10;          },&#10;          "coverageIncludesRx": "Y"&#10;        },&#10;        "otherDrugCoverage":&#10;        {&#10;          "has": "Y",&#10;          "policyId": "54E880",&#10;          "name": "ExpressRx",&#10;          "memberId": "200011"&#10;        },&#10;        "paymentType": "DIRECT",&#10;        "poa":&#10;        {&#10;          "firstName": "John",&#10;          "lastName": "Jones",&#10;          "phone": "2123309000",&#10;          "relationship": "son",&#10;          "address":&#10;          {&#10;            "line1": "1 main st",&#10;            "city": "carlisle",&#10;            "countyName": "WORCESTER",&#10;            "fips": "25027",&#10;            "state": "MA",&#10;            "zip": "01740"&#10;          }&#10;        },&#10;        "signatureDate":&#10;        {&#10;          "month": "00",&#10;          "day": 23,&#10;          "year": "2021"&#10;        }&#10;      },&#10;      "agent":&#10;      {&#10;        "npn": "007"&#10;      },&#10;      "parameters":&#10;      {&#10;        "src": "google.com",&#10;        "partnerId": "ABC05",&#10;        "projectCode": "ANTHEM",&#10;        "opportunityId": "0065Y00001W4rSaQAJ",&#10;        "customerId": "0014C00000YDHnXQAX"&#10;      },&#10;      "metadata":&#10;      {&#10;        "customerCode": "yryt9559",&#10;        "prospectId": "7a4fbbd0-7bcd-11eb-a5ae-9f284a4599fb",&#10;        "sfmAppName": "blaze",&#10;        "url": "https://sfmdev.sunfirematrix.com/app/blaze/portal/",&#10;        "startDate": "2021-03-03T03:13:31Z",&#10;        "formType": "mapd-1449-agent",&#10;        "sfid": "SFTEST01",&#10;        "sfsrc": "esigemail|purl"&#10;      },&#10;      "enrollmentCode": "ABCD123456",&#10;      "webHook":&#10;      {&#10;        "type": "ENROLLMENT"&#10;      }&#10;    }]' mediaType="application/json" />
+				<munit:variables >
+					<munit:variable key="transactionId" value="#[uuid()]" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\enrollment:application\json:api-config" doc:id="d0541f07-89d6-4a83-b18e-6c3ebadf3971" name="post:\enrollment:application\json:api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="72b77bda-78e8-42d0-ba19-50cf42bbb433" is="#[MunitTools::notNullValue()]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-post:\savedsession:application\json:api-configTest" doc:id="ea5fe541-1336-44d6-81bd-c562eaf7a622" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="610a6973-d34b-4f3e-97d1-4580edc8b277" processor="salesforce:invoke-apex-rest-method">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="storeDetails^/SessionWebhook/*^HttpPost^Output^" attributeName="methodName" />
+					<munit-tools:with-attribute whereValue="Invoke apex rest method" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#['{storeDetailsOutput={details=null, status=Success}}']" mediaType="application/java" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="16bb45d3-eb15-41c0-a699-2f7e0c125eba" >
+				<munit:payload value='[{&#10;      "pharmacyType": "RETAIL",&#10;      "partnerId": "ABCD01",&#10;      "doctors": [&#10;        {&#10;          "id": "269880",&#10;          "name": "CAMACHO, IVAN",&#10;          "npi": "1194999227",&#10;          "address":&#10;          {&#10;            "address1": "1295 NW  14TH ST",&#10;            "address2": "STE K",&#10;            "city": "MIAMI",&#10;            "state": "FL",&#10;            "zip": "33125"&#10;          }&#10;        },&#10;        {&#10;          "id": "9275394",&#10;          "name": "LOPEZ, CARLOS",&#10;          "npi": "1063531473",&#10;          "address":&#10;          {&#10;            "address1": "20950 NE  27TH CT",&#10;            "city": "MIAMI",&#10;            "state": "FL",&#10;            "zip": "33180"&#10;          }&#10;        },&#10;        {&#10;          "id": "395821",&#10;          "name": "LOPEZ-ALVAR, ALEXANDER",&#10;          "npi": "1295798882",&#10;          "address":&#10;          {&#10;            "address1": "11000 SW  211TH ST",&#10;            "city": "MIAMI",&#10;            "state": "FL",&#10;            "zip": "33189"&#10;          }&#10;        }&#10;      ],&#10;      "zip": "33010",&#10;      "county": "12086",&#10;      "year": 2020,&#10;      "drugs": [&#10;        {&#10;          "name": "Advair Diskus AERO 250-50MCG",&#10;          "id": 150993,&#10;          "ps": 4640,&#10;          "pm": 60,&#10;          "qty": 1,&#10;          "frequency": 30&#10;        },&#10;        {&#10;          "name": "Lipitor TAB 10MG",&#10;          "id": 47942,&#10;          "ps": 0,&#10;          "pm": 0,&#10;          "qty": 30,&#10;          "frequency": 30&#10;        },&#10;        {&#10;          "name": "Warfarin Sodium TAB 5MG",&#10;          "id": 23836,&#10;          "ps": 0,&#10;          "pm": 0,&#10;          "qty": 30,&#10;          "frequency": 30&#10;        }&#10;      ],&#10;      "applicants": [&#10;        {&#10;          "partBDate": "2015-04-01",&#10;          "birthDay": 20,&#10;          "birthMonth": 4,&#10;          "smoker": false,&#10;          "gender": "male",&#10;          "birthYear": 1953,&#10;          "health": "Good",&#10;          "id": 1,&#10;          "type": "primary",&#10;          "effectiveDate": "2018-11-01"&#10;        }&#10;      ],&#10;      "customerCode": "code",&#10;      "pharmacy":&#10;      {&#10;        "name": "SYLVESTRE PHARMACY",&#10;        "id": 1417970898&#10;      },&#10;      "planType": "v2",&#10;      "prospectId": "f1f4ae30-5f57-11eb-bf1d-bdbb780946c2",&#10;      "parameters":&#10;      {&#10;        "leadId": "100",&#10;        "accountId": "0014C00000YDHOAQA5"&#10;      },&#10;      "webHook":&#10;      {&#10;        "type": "SAVEDSESSION"&#10;      }&#10;    }]' mediaType="application/json" />
+				<munit:variables >
+					<munit:variable key="transactionId" value="#[uuid()]" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\savedsession:application\json:api-config" doc:id="6f86ea28-0d7e-4781-8361-2b8e9ddc2dec" name="post:\savedsession:application\json:api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="eb0f2a3e-01b6-45b5-aabe-ff6cd19d1a11" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-post:\lead:application\json:al-dtc-sys-salesforce-api-configTest" doc:id="c582f597-8330-482b-b28e-77cd01288dc2" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="6af47310-e193-4401-9c62-f7453e6ea9cf" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Lead details" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="7a508659-f30b-4d2e-91d0-845bc8085b7c" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="leadDetails-toSFDC-Flow" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\lead:application\json:al-dtc-sys-salesforce-api-config" doc:id="0f5261df-b684-4dfa-9a12-1da8f1b1c9aa" name="post:\lead:application\json:al-dtc-sys-salesforce-api-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="cdp-crm_outbound-test-suite-cdp-outbound-leadEventListener-flowTest" doc:id="5da59e84-dc33-486b-9391-a12931295a30" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="db09bf58-deb1-47e1-bcf5-c3d5331d6fa5" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ProcessAPI call" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="f4c07452-cede-46ac-9906-deb3822e78bd" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="ProcessAPI-cal-subflow" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to cdp-outbound-leadEventListener-flow" doc:id="f4aeae59-2b9c-4acc-a3e2-8ecf78d39f3d" name="cdp-outbound-leadEventListener-flow"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="cdp-crm_outbound-test-suite-ProcessAPI-cal-subflowTest" doc:id="228b989c-67f0-4204-8d45-c32664870a12" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="c1535a07-69de-40f5-a49e-53a2bddece8a" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="POST" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Process API" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="096f3138-0594-4ef0-822a-dbb805d35738" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="CDP-ProcAPI-HTTP_Requester" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/cdp-event" attributeName="path" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<ee:transform doc:name="Transform Message" doc:id="d3c5b146-948f-43d8-9a05-3d0c9467432c" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	data:
+		{
+		"payload": "Testing"
+		}
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<set-variable value="123456" doc:name="Set Variable" doc:id="968a2582-9f19-4f0d-bd7a-1a6e6d6cdaaa" variableName="transactionId"/>
+			<flow-ref doc:name="Flow-ref to ProcessAPI-cal-subflow" doc:id="5eba0b34-f412-40fd-80df-5e695fb2bd05" name="ProcessAPI-cal-subflow"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="lead-test-suite-leadDetails-toSFDC-FlowTest" doc:id="f33d7f21-f531-49f3-b3a6-473331efd5e0" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="87508f2b-97b5-4e91-9662-9f9a34426ff6" processor="salesforce:invoke-apex-rest-method">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Invoke CDP apex rest method" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="4d3bf1f0-abaa-4e9d-8e7e-5a2c95bdb860" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="CDP_Salesforce_Config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="CpdLeadStagingResource" attributeName="className" />
+					<munit-tools:with-attribute whereValue="createLeadStagings^/LeadStaging/*^HttpPost^Output^" attributeName="methodName" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="3a0f1b36-b45d-45c8-bada-a3216d6a0f44" >
+				<munit:payload value='
+&#10;[
+&#10;    {
+&#10;      "firstname": "Dick",
+&#10;      "city": "Hialeah",
+&#10;      "lead_source": "lead source",
+&#10;      "phonenumber": "9784504200",
+&#10;      "carrier_interest": "interest",
+&#10;      "county": "country",
+&#10;      "source_detail 1": "some detail 1",
+&#10;      "source_detail 2": "some detail 2",
+&#10;      "suffix": "suffix",
+&#10;      "score": "score",
+&#10;      "street": "22 South St.",
+&#10;      "product_interest": "interest",
+&#10;      "dnc": "dnc",
+&#10;      "case_id": "0066u00000236idAAA",
+&#10;      "state": "FL",
+&#10;      "email": "old_man@gmail.com",
+&#10;      "zip": "33010",
+&#10;      "product_family": "product",
+&#10;      "insights": "insights",
+&#10;      "source_type": "source type",
+&#10;      "lastname": "Johnes",
+&#10;      "current_coverrage": "current coverrage",
+&#10;      "dob": "01/01/1900",
+&#10;      "customer_id": "0016u000002Is6Rdd3",
+&#10;      "age": "121"
+&#10;    },
+&#10;    {
+&#10;      "firstname": "Dick",
+&#10;      "city": "Hialeah",
+&#10;      "lead_source": "lead source",
+&#10;      "phonenumber": "9784504200",
+&#10;      "carrier_interest": "interest",
+&#10;      "county": "country",
+&#10;      "source_detail 1": "some detail 1",
+&#10;      "source_detail 2": "some detail 2",
+&#10;      "suffix": "suffix",
+&#10;      "score": "score",
+&#10;      "street": "22 South St.",
+&#10;      "product_interest": "interest",
+&#10;      "dnc": "dnc",
+&#10;      "case_id": "0066u00000236idAAA",
+&#10;      "state": "FL",
+&#10;      "email": "old_man@gmail.com",
+&#10;      "zip": "33010",
+&#10;      "product_family": "product",
+&#10;      "insights": "insights",
+&#10;      "source_type": "source type",
+&#10;      "lastname": "Johnes",
+&#10;      "current_coverrage": "current coverrage",
+&#10;      "dob": "01/01/1900",
+&#10;      "customer_id": "0016u000002Is5IAAS",
+&#10;      "age": "121"
+&#10;    }
+&#10;]' mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to leadDetails-toSFDC-Flow" doc:id="696f0612-44b5-4fcc-8e7a-8cf00df544c8" name="leadDetails-toSFDC-Flow"/>
+		</munit:execution>
+	</munit:test>
+
+</mule>

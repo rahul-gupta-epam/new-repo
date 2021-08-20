@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="cdp-outbound-leadEventListener-flow" doc:id="5ec39552-cf70-4c00-8cb4-fc53d16c13e8" >
+		<salesforce:subscribe-channel-listener doc:name="Event listener (SFDC-to-CDP)" doc:id="f5fa208b-cd5e-477c-b850-b457654477f4" config-ref="CDP_Salesforce_Config" streamingChannel="/event/Generic_Event__e"/>
+		<set-variable value="#[uuid()]" doc:name="Set Transaction Id" doc:id="6f552e40-285b-45a7-8453-3f39f477ed49" variableName="transactionId"/>
+		<flow-ref doc:name="ProcessAPI call" doc:id="f4c07452-cede-46ac-9906-deb3822e78bd" name="ProcessAPI-cal-subflow"/>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="9034efa9-7463-48f3-b83a-c65d8c48fcd0" >
+				<logger level="INFO" doc:name="Logger" doc:id="5654c7ff-9137-4e44-a21c-3346f40987f5" message="Error in Listening to Salesforce Event: #[error.message]"/>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<sub-flow name="ProcessAPI-cal-subflow" doc:id="c66a0e83-c121-4e05-af05-874b37e2dcf3" >
+		<logger level="INFO" doc:name="Logger" doc:id="4da7b88d-da6d-41f1-ac9a-8d80e2f09f71" message="#[vars.transactionId]: Received event from Salesforce : #[payload]" />
+		<ee:transform doc:name="Transform Message" doc:id="90eca29b-dfdc-4c93-a8c6-b4abe195cbcc">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload.data.payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="12753ffe-b2c3-4983-8b3d-ba5299bcb88f" message="#[vars.transactionId]:  Pushing details to process API" />
+		<http:request method="POST" doc:name="Process API" doc:id="096f3138-0594-4ef0-822a-dbb805d35738" config-ref="CDP-ProcAPI-HTTP_Requester" path="/cdp-event" sendCorrelationId="ALWAYS" correlationId="#[vars.transactionId]">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"transactionId": vars.transactionId
+}]]]></http:headers>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="0997db90-c642-4f00-a7c3-c91d4b9fb650" message="#[vars.transactionId]: EOF. Successfully pushed event to Process API" />
+	</sub-flow>
+</mule>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<flow name="savedSessionFlow" doc:id="209d89c8-3162-47d6-8e31-61fc394c4554" >
+		<logger level="INFO" doc:name="Logger" doc:id="6f93a911-4596-458b-bb48-40f0dd1c6a94" message="#[flow.name ++ '	START transactionId is:' ++ vars.transactionId]"/>
+		<set-variable value="#[[]]" doc:name="setDeleteSessionKeysFromObjectstore" doc:id="e9792246-8551-4195-a8d8-03bd8c21c8b8" variableName="deleteSessionKeysFromObjectstore" mimeType="application/java"/>
+		<foreach doc:name="For Each" doc:id="789889cf-4972-412c-b257-802986424886" batchSize="200" collection="#[payload]">
+			<ee:transform doc:name="sunfireToSalesforceSavedSessionConversion" doc:id="cae2d6e7-9cda-494b-9bc7-a387d6d5e4fd">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"SavedSession" : payload
+}]]></ee:set-payload>
+			</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="sessionKeys" ><![CDATA[%dw 2.0
+output application/json
+---
+payload map $.customerCode]]></ee:set-variable>
+				
+</ee:variables>
+		</ee:transform>
+			<try doc:name="Try" doc:id="cb598493-9121-4fb5-92b9-ac19ef1d98a5" >
+				<logger level="INFO" doc:name="Logger" doc:id="7b910098-fa39-4eec-90d9-624065a66289" message="SavedSession CustomerCodes Sent To Salesforce is:    #[vars.sessionKeys]" />
+				<salesforce:invoke-apex-rest-method className="SessionWebhook" methodName="storeDetails^/SessionWebhook/*^HttpPost^Output^" doc:name="Invoke apex rest method" doc:id="08f91332-1078-48bd-a26f-80d1d21190ee" config-ref="Sunfire_Salesforce_QA_Config"/>
+				<logger level="INFO" doc:name="Logger" doc:id="f8fb3b4e-e03a-4827-9f51-14345b763221" message="SavedSession Response From Salesforce::  #[payload]" />
+				<set-variable value="#[%dw 2.0&#10;&#10;output application/java&#10;&#10;---&#10;&#10;flatten(vars.deleteSessionKeysFromObjectstore &lt;&lt; vars.sessionKeys)]" doc:name="updateDeleteSessionKeysFromObjectstore" doc:id="97a29664-ee8f-4cfb-8b4b-234320809a53" variableName="deleteSessionKeysFromObjectstore" mimeType="application/java" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="c28fb413-6022-4e11-9d65-352a40fe49ab" type="SALESFORCE:CONNECTIVITY, SALESFORCE:TIMEOUT">
+						<logger level="INFO" doc:name="Trigger Email Here" doc:id="ebed41ca-3683-426d-a25c-a5522d9098b0" message="#['System Down Error']" />
+					
+</on-error-continue>
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bedcda27-fb39-4e15-99a4-548868e7c189">
+						<set-variable value="#[%dw 2.0&#10;&#10;output application/java&#10;&#10;---&#10;&#10;flatten(vars.deleteSessionKeysFromObjectstore &lt;&lt; vars.sessionKeys)]" doc:name="updateDeleteSessionKeysFromObjectstore" doc:id="80ec8ba1-ffa7-4db9-b743-ff6dbc6a7767" variableName="deleteSessionKeysFromObjectstore" mimeType="application/java" />
+					</on-error-continue>
+				
+</error-handler>
+			</try>
+		
+</foreach>
+		<ee:transform doc:name="setPayload" doc:id="41098c20-1e28-4928-922b-62f67d3c6f02" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.deleteSessionKeysFromObjectstore]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

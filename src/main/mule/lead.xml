@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	
+		<flow name="leadDetails-toSFDC-Flow" doc:id="b0776159-4cea-461b-94ac-28caa3219db3" >
+		<logger level="INFO" doc:name="Logger" doc:id="ad9b9bbd-45c4-48f3-968a-9a74474e9c2f" message="#[vars.transactionId]: Received Lead details from CDP"/>
+		<ee:transform doc:name="Transform Message" doc:id="d657ef3f-12bf-4e12-ad91-10e3ad73c575" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::core::Objects
+output application/json
+---
+valueSet(payload) default []
+]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="keySet" ><![CDATA[%dw 2.0
+import * from dw::core::Objects
+output application/json
+---
+keySet(payload) default []
+]]></ee:set-variable>
+				<ee:set-variable variableName="batList" ><![CDATA[%dw 2.0
+output application/java
+---
+[]]]></ee:set-variable>
+				<ee:set-variable variableName="count" ><![CDATA[%dw 2.0
+output application/java
+---
+0]]></ee:set-variable>
+				<ee:set-variable variableName="deleteLeadKeysFromObjectstore" ><![CDATA[%dw 2.0
+output application/java
+---
+[]]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="84a0293c-c8f1-4603-9d1d-9ff9644b3e30" batchSize="200" collection="#[payload]">
+			<set-variable value="#[sizeOf(payload)]" doc:name="PayloadSize" doc:id="6019aa62-c926-4535-a9be-d14cbf9f25ac" variableName="size"/>
+			<ee:transform doc:name="CDPtoSFDC Lead-details" doc:id="96b89ec5-cf62-4045-ac26-34718be44b1b">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"payload" : payload
+}]]></ee:set-payload>
+			</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="batList" ><![CDATA[%dw 2.0
+output application/java
+var x = vars.count + vars.size - 1
+---
+vars.keyset[vars.count to x]]]></ee:set-variable>
+				
+</ee:variables>
+		</ee:transform>
+			<set-variable value="#[vars.count + vars.size]" doc:name="Count value" doc:id="65866c06-ee4d-4c46-9a74-b1a404334ebc" variableName="count"/>
+			<try doc:name="Try" doc:id="25090b99-b724-4d70-9565-889bc12d3e20" >
+				<logger level="INFO" doc:name="Logger" doc:id="c1309e41-32d8-4636-98f5-eaf087c49be2" message="Sending Lead details to SFDC:   #[vars.leadKeys]"/> 
+				<salesforce:invoke-apex-rest-method doc:name="Invoke CDP apex rest method" doc:id="4d3bf1f0-abaa-4e9d-8e7e-5a2c95bdb860" config-ref="CDP_Salesforce_Config" className="CpdLeadStagingResource" methodName="createLeadStagings^/LeadStaging/*^HttpPost^Output^"/>
+				<logger level="INFO" doc:name="Logger" doc:id="2290256b-4964-4d21-833b-003ee2a5eea8" message="Lead Response From Salesforce::  #[payload]" />
+				<set-variable value="#[%dw 2.0&#10;output application/java&#10;---&#10;flatten(vars.deleteLeadKeysFromObjectstore &lt;&lt; vars.batList)]" doc:name="updateDeleteLeadKeysFromObjectstore" doc:id="6216e838-6167-43c4-a51d-107babd7b866" variableName="deleteLeadKeysFromObjectstore" mimeType="application/java" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="1b47b309-5118-4f88-95e9-b415b3ac182c">
+						<logger level="INFO" doc:name="Trigger Email Here" doc:id="4cd0cc3c-a3c9-4dcc-b2dc-e3b555f822ea" message="#['System Down Error ----- Sending Cloudhub alert']" />
+						<ee:transform doc:name="Transform Message" doc:id="ff50a94d-6058-49fb-bdee-dcdbe4d6db7e" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message": "Salesforce Connection issue, Records will be re-processed by Mule",
+	"FailedRecords": vars.leadKeys
+}]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+						<flow-ref doc:name="Cloudhub alert" doc:id="031150ca-fc06-478c-b23a-782f320afd3f" name="Cloudhub-CreateAlert-flow"/>
+					
+</on-error-continue>
+				</error-handler>
+			</try>
+		</foreach>
+		<ee:transform doc:name="setPayload" doc:id="7b8f4649-e4d6-4917-a0d6-3dbeaa54ad3a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.deleteLeadKeysFromObjectstore]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	</mule>
